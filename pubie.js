@@ -224,10 +224,13 @@ var PUBIE = function () {
 
       GameEntity.prototype.controls = function (obj) {
         var s = this.speed;
-        if (keys[obj.up]) { this.y -= s; return; }
-        if (keys[obj.down]) { this.y += s; return; }
-        if (keys[obj.right]) { this.x += s; return; }
-        if (keys[obj.left]) { this.x -= s; return; }
+        var p = obj.precedence;
+        for (var i = 0; i < 4; i++) {
+          if (keys[obj.up] && p[i] === 'up') { this.y -= s; return; }
+          if (keys[obj.down] && p[i] === 'down') { this.y += s; return; }
+          if (keys[obj.right] && p[i] === 'right') { this.x += s; return; }
+          if (keys[obj.left] && p[i] === 'left') { this.x -= s; return; }
+        }
       };
 
       GameEntity.prototype.collision = function (otherEntity) {
@@ -337,8 +340,8 @@ var PUBIE = function () {
 
       var doControls = function () {
         var c = controls;
-        pubie.controls({ up: c.up, down: c.down, right: c.right, left: c.left });
-        if (lugie.exists) lugie.controls({ up: c.down, down: c.up, right: c.left, left: c.right });
+        pubie.controls({ up: c.up, down: c.down, right: c.right, left: c.left, precedence: ['up', 'down', 'right', 'left'] });
+        if (lugie.exists) lugie.controls({ up: c.down, down: c.up, right: c.left, left: c.right, precedence: ['down', 'up', 'left', 'right'] });
       };
 
       var doCollision = function () {

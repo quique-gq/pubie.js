@@ -440,6 +440,7 @@ var PUBIE = function () {
             TIMER++;
           } else {
             canvas.style.filter = 'brightness(33.33%)';
+            stage.fillStyle = '#FFFFFF';
             stage.font = '64px MS Sans Serif';
             stage.fillText('PAUSED', 212, 225);
           }

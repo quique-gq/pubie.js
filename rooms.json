@@ -1,0 +1,19 @@
+{
+  "1": {
+    "pubie": { "x": 50, "y": 75 },
+    "lugie": { "exists": false },
+    "back": { "exists": false },
+    "finish": { "type": "atome", "x": 150, "y": 150 },
+    "dynomete": []
+  },
+  "2": {
+    "pubie": { "x": 250, "y": 250 },
+    "lugie": { "exists": true, "x": 350, "y": 350 },
+    "back": { "x": 40, "y": 50 },
+    "finish": { "type": "atome", "x": 300, "y": 300 },
+    "dynomete": [
+      { "x": 175, "y": 275 },
+      { "x": 400, "y": 400 }
+    ]
+  }
+}

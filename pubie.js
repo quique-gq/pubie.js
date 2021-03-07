@@ -284,7 +284,6 @@ var PUBIE = function () {
       var initRoom = function (room) {
         curRoom = rooms[room.toString()];
         if (!curRoom) { ROOM = 1; curRoom = rooms["1"] };
-        yay.stop();
 
         var initPubie = function () {
           var p = curRoom.pubie;

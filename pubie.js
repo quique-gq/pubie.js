@@ -339,7 +339,7 @@ var PUBIE = function () {
       };
 
       var doCollision = function () {
-        if (pubie.collision(back)) ROOM--;
+        if (pubie.collision(back)) ROOM = 1;
         if (pubie.collision(finish)) {
           yay.play(0);
           ROOM++;

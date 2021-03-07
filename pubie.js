@@ -90,7 +90,7 @@ var PUBIE = function () {
     initEventListeners();
     initAssets(assets);
     initCanvas();
-    document.body.appendChild(canvas);
+    document.getElementById('pubieContainer').appendChild(canvas);
     console.log('pubie.js ' + info.version);
     console.log('by ' + info.authors);
     requestAnimationFrame(game.loop);

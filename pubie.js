@@ -111,7 +111,7 @@ var PUBIE = function () {
   var GameAudio = function (src) {
     this.audio = document.createElement('audio');
     this.audio.src = src;
-    this.audio.volume = 0.5;
+    //this.audio.volume = 0.5;
     this.loop = false;
     this.ready = false;
     var self = this;
@@ -248,13 +248,13 @@ var PUBIE = function () {
         texture: assets.textures.pubie,
         x: 100,
         y: 100,
-        speed: 2
+        speed: 3
       });
       var lugie = new GameEntity({
         texture: assets.textures.lugie,
         x: 250,
         y: 250,
-        speed: 2
+        speed: 3
       });
       var back = new GameEntity({
         texture: assets.textures.back,

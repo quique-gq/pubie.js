@@ -1,19 +1,67 @@
 {
   "1": {
-    "pubie": { "x": 50, "y": 75 },
+    "pubie": { "x": 6, "y": 7 },
     "lugie": { "exists": false },
-    "back": { "exists": false },
-    "finish": { "type": "atome", "x": 150, "y": 150 },
+    "back": { "exists": true, "x": 5, "y": 17 },
+    "finish": { "type": "atome", "x": 13, "y": 12 },
     "dynomete": []
   },
   "2": {
-    "pubie": { "x": 250, "y": 250 },
-    "lugie": { "exists": true, "x": 350, "y": 350 },
-    "back": { "x": 40, "y": 50 },
-    "finish": { "type": "atome", "x": 300, "y": 300 },
+    "pubie": { "x": 10, "y": 5 },
+    "lugie": { "exists": false },
+    "back": { "x": 9, "y": 16, "exists": true },
+    "finish": { "type": "atome", "x": 14, "y": 7 },
     "dynomete": [
-      { "x": 175, "y": 275 },
-      { "x": 400, "y": 400 }
+      { "x": 13, "y": 6 }
     ]
+  },
+  "3": {
+    "pubie": { "x": 2, "y": 10 },
+    "lugie": { "exists": false },
+    "back": { "x": 8, "y": 21, "exists": true },
+    "finish": { "type": "atome", "x": 16, "y": 7 },
+    "dynomete": [
+      { "x": 11, "y": 2 },
+      { "x": 11, "y": 3 },
+      { "x": 11, "y": 4 },
+      { "x": 10, "y": 5 },
+      { "x": 10, "y": 6 },
+      { "x": 10, "y": 7 },
+      { "x": 10, "y": 8 },
+      { "x": 10, "y": 9 },
+      { "x": 10, "y": 10 },
+      { "x": 11, "y": 10 },
+      { "x": 11, "y": 11 },
+      { "x": 11, "y": 12 },
+      { "x": 11, "y": 13 },
+      { "x": 11, "y": 14 },
+      { "x": 11, "y": 15 },
+      { "x": 11, "y": 16 }
+    ]
+  },
+  "4": {
+    "pubie": { "x": 4, "y": 15 },
+    "lugie": { "x": 5, "y": 6, "exists": true },
+    "back": { "x": 10, "y": 22, "exists": true },
+    "finish": { "type": "atome", "x": 18, "y": 13 },
+    "dynomete": [
+      { "x": 1, "y": 5 }
+    ]
+  },
+  "5": {
+    "pubie": { "x": 10, "y": 7 },
+    "lugie": { "x": 10, "y": 15, "exists": true },
+    "back": { "x": 18, "y": 20, "exists": true },
+    "finish": { "type": "atome", "x": 10, "y": 11 },
+    "dynomete": [
+      { "x": 8, "y": 11 }
+    ]
+  },
+  "6": {
+    "pubie": { "x": 5, "y": 11 },
+    "lugie": { "x": 19, "y": 11, "exists": true },
+    "back": { "x": 9, "y": 21, "exists": true },
+    "finish": { "type": "escape", "x": 10, "y": 11 },
+    "dynomete": []
   }
 }

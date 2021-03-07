@@ -216,9 +216,12 @@ var PUBIE = function () {
         this.texture = obj.texture;
         this.x = obj.x;
         this.y = obj.y;
-        this.w = this.texture.w;
-        this.h = this.texture.h;
         this.speed = obj.speed;
+      };
+
+      GameEntity.prototype.setGridPos = function (obj) {
+        this.x = obj.x * obj.s - this.texture.w / 2;
+        this.y = obj.y * obj.s - this.texture.h / 2;
       };
 
       GameEntity.prototype.controls = function (obj) {
@@ -233,14 +236,12 @@ var PUBIE = function () {
       };
 
       GameEntity.prototype.collision = function (otherEntity) {
-        var rect1 = this;
-        var rect2 = otherEntity;
+        var rect1 = { x: this.x, y: this.y, w: this.texture.w, h: this.texture.h };
+        var rect2 = { x: otherEntity.x, y: otherEntity.y, w: otherEntity.texture.w, h: otherEntity.texture.h };
         return (rect1.x < rect2.x + rect2.w && rect1.x + rect1.w > rect2.x && rect1.y < rect2.y + rect2.h && rect1.y + rect1.h > rect2.y)
       };
 
       GameEntity.prototype.render = function (ctx) {
-        this.w = this.texture.w; // recalc width/height in case texture didn't load the first time
-        this.h = this.texture.h;
         ctx.drawImage(this.texture.img, this.x, this.y);
       };
 
@@ -275,25 +276,25 @@ var PUBIE = function () {
       requestText('./rooms.json', function (json) {
         rooms = JSON.parse(json);
       });
+      var curRoom;
       var lastRoom;
       var dynometes = [];
+      var scale = 16;
 
       var initRoom = function (room) {
-        var cur = rooms[room.toString()];
-        if (!cur) { ROOM = 1; cur = rooms["1"] };
+        curRoom = rooms[room.toString()];
+        if (!curRoom) { ROOM = 1; curRoom = rooms["1"] };
         yay.stop();
 
         var initPubie = function () {
-          var p = cur.pubie;
-          pubie.x = p.x;
-          pubie.y = p.y;
+          var p = curRoom.pubie;
+          pubie.setGridPos({ x: p.x, y: p.y, s: scale });
         };
 
         var initLugie = function () {
-          var l = cur.lugie;
+          var l = curRoom.lugie;
           if (l.exists) {
-            lugie.x = l.x;
-            lugie.y = l.y;
+            lugie.setGridPos({ x: l.x, y: l.y, s: scale });
             lugie.exists = true;
           } else {
             lugie.exists = false;
@@ -301,10 +302,9 @@ var PUBIE = function () {
         };
 
         var initBack = function () {
-          var b = cur.back;
+          var b = curRoom.back;
           if (b.exists) {
-            back.x = b.x;
-            back.y = b.y;
+            back.setGridPos({ x: b.x, y: b.y, s: scale });
             back.exists = true;
           } else {
             back.exists = false;
@@ -312,21 +312,17 @@ var PUBIE = function () {
         };
 
         var initFinish = function () {
-          var f = cur.finish;
+          var f = curRoom.finish;
           finish.texture = assets.textures[f.type];
-          finish.x = f.x;
-          finish.y = f.y;
+          finish.setGridPos({ x: f.x, y: f.y, s: scale });
         };
 
         var initDynometes = function () {
-          var d = cur.dynomete;
+          var d = curRoom.dynomete;
           dynometes = [];
           d.forEach(function (dCur) {
-            dynometes.push(new GameEntity({
-              texture: assets.textures.dynomete,
-              x: dCur.x,
-              y: dCur.y
-            }));
+            dynometes.push(new GameEntity({ texture: assets.textures.dynomete }));
+            dynometes[dynometes.length - 1].setGridPos({ x: dCur.x, y: dCur.y, s: scale });
           });
         };
 
@@ -344,7 +340,22 @@ var PUBIE = function () {
       };
 
       var doCollision = function () {
-        if (pubie.collision(finish)) { yay.play(); ROOM++; STATE = 'roomFinished'; }
+        if (pubie.collision(back)) ROOM--;
+        if (pubie.collision(finish)) {
+          yay.play(0);
+          ROOM++;
+          if (curRoom.finish.type === 'atome') {
+            STATE = 'roomFinished';
+          } else if (curRoom.finish.type === 'escape') {
+            STATE = 'pubieWin';
+          }
+          return;
+        }
+        if (lugie.collision(finish)) { weoo.play(0); STATE = 'lugieLose'; return; }
+        dynometes.forEach(function (cur) {
+          if (pubie.collision(cur)) { gameover.play(0); STATE = 'lose'; }
+          if (lugie.collision(cur)) { yay.play(0); lugie.setGridPos({ x: undefined, y: undefined, s: 0 }); }
+        });
       };
 
       var doRendering = (function () {
@@ -354,14 +365,15 @@ var PUBIE = function () {
         dCanvas.height = info.height;
         var lastRoom;
 
-        var initDynomete = function () {
+        var initDynometes = function () {
           dStage.clearRect(0, 0, dCanvas.width, dCanvas.height);
           dynometes.forEach(function (cur) { cur.render(dStage); });
         };
 
         return function () {
           if (lastRoom !== ROOM) {
-            initDynomete();
+            if (ROOM < 1) ROOM = 1;
+            initDynometes();
             lastRoom = ROOM;
           }
           if (lugie.exists) lugie.render(stage);
@@ -384,9 +396,10 @@ var PUBIE = function () {
       }
     })();
 
-    var roomFinished = (function () {
+    var textbox = (function () {
       var lCanvas = document.createElement('canvas');
       var lStage = lCanvas.getContext('2d');
+      var lastCase;
 
       var initTextbox = function () {
         lCanvas.width = info.width / 2;
@@ -400,14 +413,37 @@ var PUBIE = function () {
         lStage.strokeStyle = '#3C3C3C';
         lStage.lineWidth = 5;
         lStage.strokeRect(0, 0, lCanvas.width, lCanvas.height);
-        lStage.fillStyle = '#FFFFFF';
-        lStage.fillText('congratulations. pubie have collected an MOLECULE', 30, 30);
-        lStage.fillText('press [' + controls.ok.toUpperCase() + '] to continue', 100, 60);
+      };
+
+      var drawText = function (text) {
+        lStage.fillText(text, 30, 30);
       };
 
       initTextbox();
 
-      return function () {
+      return function (textCase) {
+        if (textCase !== lastCase) {
+          initTextbox();
+          lStage.fillStyle = '#FFFFFF';
+          switch (textCase) {
+            case 'roomFinished':
+              drawText('congratulations. pubie have collected an MOLECULE');
+              break;
+            case 'lose':
+              drawText('pubie have lose');
+              ROOM = 1;
+              break;
+            case 'lugieLose':
+              drawText('lugie have stolen your molecule');
+              ROOM = 1;
+              break;
+            case 'pubieWin':
+              drawText('pubie got out , and wonned against lugie you win');
+              ROOM = 1;
+          }
+          lStage.fillText('press [' + controls.ok.toUpperCase() + '] to continue', 100, 60);
+          lastCase = textCase;
+        }
         stage.drawImage(lCanvas, info.width / 2 - lCanvas.width / 2, info.height / 2 - lCanvas.height / 2);
         if (keys[controls.ok]) STATE = 'play';
       }
@@ -437,7 +473,16 @@ var PUBIE = function () {
                 play(ROOM);
                 break;
               case 'roomFinished':
-                roomFinished();
+                textbox('roomFinished');
+                break;
+              case 'lose':
+                textbox('lose');
+                break;
+              case 'lugieLose':
+                textbox('lugieLose');
+                break;
+              case 'pubieWin':
+                textbox('pubieWin');
                 break;
               default:
                 throw ('Error: requested state does not exist!');

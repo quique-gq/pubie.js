@@ -2,7 +2,7 @@
 // original game by hoylecake (https://hoylecake.com/pubie/)
 // more at quique.gq
 
-var PUBIE = function () {
+var PUBIE = (function () {
   'use strict';
 
   var canvas = document.createElement('canvas');
@@ -350,10 +350,10 @@ var PUBIE = function () {
           }
           return;
         }
-        if (lugie.collision(finish)) { weoo.play(0); STATE = 'lugieLose'; return; }
+        if (lugie.collision(finish) && lugie.exists) { weoo.play(0); STATE = 'lugieLose'; return; }
         dynometes.forEach(function (cur) {
           if (pubie.collision(cur)) { gameover.play(0); STATE = 'lose'; }
-          if (lugie.collision(cur)) { yay.play(0); lugie.setGridPos({ x: undefined, y: undefined, s: 0 }); }
+          if (lugie.collision(cur) && lugie.exists) { yay.play(0); lugie.exists = false; }
         });
       };
 
@@ -502,6 +502,6 @@ var PUBIE = function () {
   return {
     init: init
   }
-};
+})();
 
 // fin

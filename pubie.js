@@ -80,7 +80,6 @@ var PUBIE = function () {
     canvas.style.height = info.heightCSS;
     canvas.style.background = info.bg;
     canvas.style.display = 'block';
-    canvas.style.margin = 'auto';
     canvas.style.imageRendering = info.aa ? 'auto' : 'pixelated';
     canvas.style.imageRendering = info.aa ? 'auto' : '-moz-crisp-edges';
     stage.imageSmoothingEnabled = info.aa;
@@ -403,7 +402,6 @@ var PUBIE = function () {
         lStage.strokeRect(0, 0, lCanvas.width, lCanvas.height);
         lStage.fillStyle = '#FFFFFF';
         lStage.fillText('congratulations. pubie have collected an MOLECULE', 30, 30);
-        lStage.font = 'bold 12px MS Sans Serif';
         lStage.fillText('press [' + controls.ok.toUpperCase() + '] to continue', 100, 60);
       };
 

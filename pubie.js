@@ -182,7 +182,7 @@ var PUBIE = function () {
       var drawSkipText = function () {
         lStage.font = '16px MS Sans Serif';
         lStage.fillStyle = '#5A5A5A';
-        lStage.fillText('Press [ENTER] to skip', 25, lCanvas.height - 25);
+        lStage.fillText('Press ' + controls.ok.toUpperCase() + ' to skip', 25, lCanvas.height - 25);
       };
 
       var drawOverlay = function () {
@@ -191,7 +191,7 @@ var PUBIE = function () {
       };
 
       var doTiming = function () {
-        if (keys['Enter']) STATE = 'play';
+        if (keys[controls.ok]) STATE = 'play';
         lStage.clearRect(0, 0, lCanvas.width, lCanvas.height);
         drawLogo();
         drawSkipText();
@@ -401,14 +401,14 @@ var PUBIE = function () {
         lStage.fillStyle = '#FFFFFF';
         lStage.fillText('congratulations. pubie have collected an MOLECULE', 30, 30);
         lStage.font = 'bold 12px MS Sans Serif';
-        lStage.fillText('press ENTER to continue', 100, 60);
+        lStage.fillText('press [' + controls.ok.toUpperCase() + '] to continue', 100, 60);
       };
 
       initTextbox();
 
       return function () {
         stage.drawImage(lCanvas, info.width / 2 - lCanvas.width / 2, info.height / 2 - lCanvas.height / 2);
-        if (keys['Enter']) STATE = 'play';
+        if (keys[controls.ok]) STATE = 'play';
       }
     })();
 

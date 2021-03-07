@@ -231,14 +231,14 @@ var PUBIE = function () {
       };
 
       GameEntity.prototype.collision = function (otherEntity) {
-        this.w = this.texture.w; // recalc width/height in case texture didn't load the first time
-        this.h = this.texture.h;
         var rect1 = this;
         var rect2 = otherEntity;
         return (rect1.x < rect2.x + rect2.w && rect1.x + rect1.w > rect2.x && rect1.y < rect2.y + rect2.h && rect1.y + rect1.h > rect2.y)
       };
 
       GameEntity.prototype.render = function (ctx) {
+        this.w = this.texture.w; // recalc width/height in case texture didn't load the first time
+        this.h = this.texture.h;
         ctx.drawImage(this.texture.img, this.x, this.y);
       };
 

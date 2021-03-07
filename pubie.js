@@ -102,7 +102,11 @@ var PUBIE = function () {
     this.img.src = src;
     this.ready = false;
     var self = this;
-    this.img.onload = function () { self.ready = true; };
+    this.img.onload = function () {
+      self.ready = true;
+      self.w = self.img.width;
+      self.h = self.img.height;
+    };
   };
 
   var GameAudio = function (src) {
@@ -213,8 +217,8 @@ var PUBIE = function () {
         this.texture = obj.texture;
         this.x = obj.x;
         this.y = obj.y;
-        this.w = obj.texture.img.width;
-        this.h = obj.texture.img.height;
+        this.w = this.texture.w;
+        this.h = this.texture.h;
         this.speed = obj.speed;
       };
 
@@ -227,8 +231,8 @@ var PUBIE = function () {
       };
 
       GameEntity.prototype.collision = function (otherEntity) {
-        this.w = this.texture.img.width;
-        this.h = this.texture.img.height;
+        this.w = this.texture.w; // recalc width/height in case texture didn't load the first time
+        this.h = this.texture.h;
         var rect1 = this;
         var rect2 = otherEntity;
         return (rect1.x < rect2.x + rect2.w && rect1.x + rect1.w > rect2.x && rect1.y < rect2.y + rect2.h && rect1.y + rect1.h > rect2.y)

@@ -24,29 +24,42 @@
       text-align: center;
     }
 
+    footer {
+      display: inline-block;
+    }
+
     p {
       margin: 10px;
     }
     
-    .big {
+    .h1 { /* default headers don't look good with the font */
       font-size: 32px;
+    }
+
+    .h2 {
+      font-size: 24px;
     }
   </style>
 </head>
 <body onload="PUBIE.init()">
-  <p class="big">Pubie.js</p>
-  <p>by Literal Line&emsp;Source code: <a href="https://github.com/quique-gq/pubie.js" target="_blank">Github</a>&emsp;Original game by <a href="https://hoylecake.com/pubie" target="_blank">Hoylecake</a></p>
-  <p><p></p>
-  <p></p>
-  <p><strong>Controls: WASD</strong></p>
-  <div id="pubieContainer" style="margin: auto; display: inline-block"></div>
-  <br>
-  <p>Discord: Lɪᴛᴇʀᴀʟ#9801</p>
-  <p>more at <a href="https://quique.gq" target="_blank">Quique.gq</a></p>
-  <a style="text-decoration: none; image-rendering: pixelated" href="https://hoylecake.com" target="_blank">
-    <img src="./assets/hoylecake.gif">
-    <img src="./assets/hoylecakeneocities.png">
-  </a>
+  <p class="h1">Pubie.js</p>
+  <p><a href="https://pubie.quique.gq">More Pubie online</a></p>
+  <div id="pubieContainer" style="margin: 10px auto 10px auto; display: inline-block"></div>
+  <p class="h2">Controls</p>
+  <p>Movement: WASD</p>
+  <p>Advance text: Enter</p>
+  <footer>
+    <hr>
+    <p>by Literal Line&emsp;
+      Source code: <a href="https://github.com/quique-gq/pubie" target="_blank">Github</a>&emsp;
+      Original Pubie game by <a href="https://hoylecake.com/pubie" target="_blank">Hoylecake</a>&emsp;
+      more at <a href="https://quique.gq" target="_blank">Quique.gq</a>
+    </p>
+    <a style="text-decoration: none; image-rendering: pixelated" href="https://hoylecake.com" target="_blank">
+      <img src="./assets/hoylecake.gif">
+      <img src="./assets/hoylecakeneocities.png">
+    </a>
+  </footer>
   <!--script src="https://markknol.github.io/console-log-viewer/console-log-viewer.js"></script-->
   <script src="pubie.js"></script>
 </body>

@@ -105,7 +105,25 @@ var PUBIE = (function () {
       self.ready = true;
       self.w = self.img.width;
       self.h = self.img.height;
+      self.collisionMask = GameTexture.createCollisionMask(self.img);
     };
+  };
+
+  GameTexture.createCollisionMask = function (img) {
+    var tempCanvas = document.createElement('canvas');
+    var tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = img.width;
+    tempCanvas.height = img.height;
+    tempCtx.drawImage(img, 0, 0);
+    var data = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data;
+    var newData = [];
+    for (var y = 0; y < img.height; y++) {
+      newData.push([]);
+      for (var x = 0; x < img.width; x++) {
+        newData[y][x] = data[(y * img.width + x) * 4 + 3] ? 1 : 0;
+      }
+    }
+    return newData;
   };
 
   var GameAudio = function (src) {
@@ -238,7 +256,31 @@ var PUBIE = (function () {
       GameEntity.prototype.collision = function (otherEntity) {
         var rect1 = { x: this.x, y: this.y, w: this.texture.w, h: this.texture.h };
         var rect2 = { x: otherEntity.x, y: otherEntity.y, w: otherEntity.texture.w, h: otherEntity.texture.h };
-        return (rect1.x < rect2.x + rect2.w && rect1.x + rect1.w > rect2.x && rect1.y < rect2.y + rect2.h && rect1.y + rect1.h > rect2.y)
+        if (rect1.x < rect2.x + rect2.w && rect1.x + rect1.w > rect2.x && rect1.y < rect2.y + rect2.h && rect1.y + rect1.h > rect2.y) {
+          var xMin = Math.min(rect1.x, rect2.x); // crap pixel collision by YOURS TRULY
+          var xMax = Math.min(rect1.x + rect1.w, rect2.x + rect2.w);
+          var yMin = Math.min(rect1.y, rect2.y);
+          var yMax = Math.max(rect1.y + rect1.h, rect2.y + rect2.h);
+          var mask1 = this.texture.collisionMask;
+          var mask2 = otherEntity.texture.collisionMask;
+          var cornerX1 = rect1.x - xMin;
+          var cornerY1 = rect1.y - yMin;
+          var cornerX2 = rect2.x - xMin;
+          var cornerY2 = rect2.y - yMin;
+          var boxWidth = xMax - xMin;
+          var boxHeight = yMax - yMin;
+          for (var y = 0; y < boxHeight; y++) {
+            for (var x = 0; x < boxWidth; x++) {
+              var ofs1X = x - cornerX1;
+              var ofs1Y = y - cornerY1;
+              var ofs2X = x - cornerX2;
+              var ofs2Y = y - cornerY2;
+              if(typeof mask1[ofs1Y] === 'undefined') continue;
+              if(typeof mask2[ofs2Y] === 'undefined') continue;
+              if (mask1[ofs1Y][ofs1X] && mask2[ofs2Y][ofs2X]) return true;
+            }
+          }
+        }
       };
 
       GameEntity.prototype.render = function (ctx) {

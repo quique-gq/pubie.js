@@ -2,7 +2,7 @@
   "1": {
     "pubie": { "x": 6, "y": 7 },
     "lugie": { "exists": false },
-    "back": { "x": 5, "y": 17, "exists": true },
+    "back": { "x": 7, "y": 17, "exists": true },
     "finish": { "type": "atome", "x": 13, "y": 12 },
     "dynomete": []
   },

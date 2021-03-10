@@ -243,6 +243,8 @@ var PUBIE = (function () {
       GameEntity.prototype.setGridPos = function (obj) {
         this.x = obj.x * obj.s - this.texture.w / 2;
         this.y = obj.y * obj.s - this.texture.h / 2;
+        this.velX = 0;
+        this.velY = 0;
       };
 
       GameEntity.prototype.controls = function (obj) {
@@ -351,7 +353,7 @@ var PUBIE = (function () {
 
       var initRoom = function (room) {
         curRoom = rooms[room.toString()];
-        if (!curRoom) { ROOM = 1; curRoom = rooms["1"] };
+        if (!curRoom) { ROOM = 1; curRoom = rooms['1']; };
 
         var initPubie = function () {
           var p = curRoom.pubie;

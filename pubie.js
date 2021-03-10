@@ -234,7 +234,10 @@ var PUBIE = (function () {
         this.texture = obj.texture;
         this.x = obj.x;
         this.y = obj.y;
+        this.velX = obj.velX || 0;
+        this.velY = obj.velY || 0;
         this.speed = obj.speed;
+        this.friction = obj.friction;
       };
 
       GameEntity.prototype.setGridPos = function (obj) {
@@ -246,11 +249,32 @@ var PUBIE = (function () {
         var s = this.speed;
         var p = obj.precedence;
         for (var i = 0; i < 4; i++) {
-          if (keys[obj.up] && p[i] === 'up') { this.y -= s; return; }
-          if (keys[obj.down] && p[i] === 'down') { this.y += s; return; }
-          if (keys[obj.right] && p[i] === 'right') { this.x += s; return; }
-          if (keys[obj.left] && p[i] === 'left') { this.x -= s; return; }
+          if (keys[obj.up] && p[i] === 'up') { this.move(0, -s, { rel: false }); return; }
+          if (keys[obj.down] && p[i] === 'down') { this.move(0, s, { rel: false }); return; }
+          if (keys[obj.right] && p[i] === 'right') { this.move(s, 0, { rel: false }); return; }
+          if (keys[obj.left] && p[i] === 'left') { this.move(-s, 0, { rel: false }); return; }
         }
+      };
+
+      GameEntity.prototype.move = function (amtX, amtY, obj) {
+        if (obj.rel) {
+          this.velX += amtX;
+          this.velY += amtY;
+        } else {
+          this.velX = amtX;
+          this.velY = amtY;
+        }
+      };
+
+      GameEntity.prototype.physics = function () { // im not that proud of this code but it works so idk lol
+        var s = this.speed;
+        var f = this.friction;
+        if (this.velX > 0) this.velX = Math.max(this.velX - f, 0);
+        if (this.velX < 0) this.velX = Math.min(this.velX + f, 0);
+        if (this.velY > 0) this.velY = Math.max(this.velY - f, 0);
+        if (this.velY < 0) this.velY = Math.min(this.velY + f, 0);
+        this.x += this.velX;
+        this.y += this.velY;
       };
 
       GameEntity.prototype.collision = function (otherEntity) {
@@ -275,8 +299,8 @@ var PUBIE = (function () {
               var ofs1Y = y - cornerY1;
               var ofs2X = x - cornerX2;
               var ofs2Y = y - cornerY2;
-              if(typeof mask1[ofs1Y] === 'undefined') continue;
-              if(typeof mask2[ofs2Y] === 'undefined') continue;
+              if (typeof mask1[ofs1Y] === 'undefined') continue;
+              if (typeof mask2[ofs2Y] === 'undefined') continue;
               if (mask1[ofs1Y][ofs1X] && mask2[ofs2Y][ofs2X]) return true;
             }
           }
@@ -291,13 +315,15 @@ var PUBIE = (function () {
         texture: assets.textures.pubie,
         x: 100,
         y: 100,
-        speed: 3
+        speed: 4,
+        friction: 1
       });
       var lugie = new GameEntity({
         texture: assets.textures.lugie,
         x: 250,
         y: 250,
-        speed: 3
+        speed: 4,
+        friction: 1
       });
       var back = new GameEntity({
         texture: assets.textures.back,
@@ -399,47 +425,60 @@ var PUBIE = (function () {
         });
       };
 
-      var doRendering = (function () {
+      var doPhysics = function () {
+        pubie.physics();
+        if (lugie.exists) lugie.physics();
+      };
+
+      var rendering = (function () {
         var dCanvas = document.createElement('canvas');
         var dStage = dCanvas.getContext('2d');
         dCanvas.width = info.width;
         dCanvas.height = info.height;
-        var lastRoom;
 
         var initDynometes = function () {
           dStage.clearRect(0, 0, dCanvas.width, dCanvas.height);
           dynometes.forEach(function (cur) { cur.render(dStage); });
         };
 
-        return function () {
-          if (lastRoom !== ROOM) {
-            if (ROOM < 1) ROOM = 1;
+        return {
+          init: function () {
             initDynometes();
-            lastRoom = ROOM;
+            // init whatever else if anything else added
+          },
+          do: function () {
+            if (lugie.exists) lugie.render(stage);
+            if (back.exists) back.render(stage);
+            pubie.render(stage);
+            finish.render(stage);
+            stage.drawImage(dCanvas, 0, 0);
           }
-          if (lugie.exists) lugie.render(stage);
-          if (back.exists) back.render(stage);
-          pubie.render(stage);
-          finish.render(stage);
-          stage.drawImage(dCanvas, 0, 0);
         }
       })();
 
       return function (room) {
         if (!rooms) return;
         if (ROOM !== lastRoom) {
+          if (ROOM < 1) ROOM = 1;
           initRoom(ROOM);
+          rendering.init();
           lastRoom = ROOM;
         }
         doControls();
-        doRendering();
+        doPhysics();
         doCollision();
+        rendering.do();
       }
     })();
 
     var textbox = (function () {
       var lCanvas = document.createElement('canvas');
       var lStage = lCanvas.getContext('2d');
+      var screenshot = document.createElement('canvas');
+      var screenshotCtx = screenshot.getContext('2d');
+      screenshot.width = info.width;
+      screenshot.height = info.height;
+      var lastTimer;
       var lastCase;
 
       var initTextbox = function () {
@@ -463,6 +502,11 @@ var PUBIE = (function () {
       initTextbox();
 
       return function (textCase) {
+        if (TIMER !== lastTimer) {
+          screenshotCtx.clearRect(0, 0, screenshot.width, screenshot.height);
+          screenshotCtx.drawImage(lastFrameCanvas, 0, 0);
+          lastTimer = TIMER;
+        }
         if (textCase !== lastCase) {
           initTextbox();
           lStage.fillStyle = '#FFFFFF';
@@ -485,6 +529,7 @@ var PUBIE = (function () {
           lStage.fillText('press [' + controls.ok.toUpperCase() + '] to continue', 100, 60);
           lastCase = textCase;
         }
+        stage.drawImage(screenshot, 0, 0);
         stage.drawImage(lCanvas, info.width / 2 - lCanvas.width / 2, info.height / 2 - lCanvas.height / 2);
         if (keys[controls.ok]) STATE = 'play';
       }
@@ -493,6 +538,10 @@ var PUBIE = (function () {
     var delta = 0;
     var then = 0;
     var interval = 1000 / info.fps;
+    var lastFrameCanvas = document.createElement('canvas');
+    var lastFrameStage = lastFrameCanvas.getContext('2d');
+    lastFrameCanvas.width = info.width;
+    lastFrameCanvas.height = info.height;
 
     return {
       loop: function (now) {
@@ -505,6 +554,7 @@ var PUBIE = (function () {
         if (delta > interval) {
           if (!PAUSE) {
             canvas.style.filter = 'brightness(100%)';
+            lastFrameStage.drawImage(canvas, 0, 0);
             stage.clearRect(0, 0, canvas.width, canvas.height);
             switch (STATE) {
               case 'intro':
@@ -528,6 +578,7 @@ var PUBIE = (function () {
               default:
                 throw ('Error: requested state does not exist!');
             }
+            lastFrameStage.clearRect(0, 0, lastFrameCanvas.width, lastFrameCanvas.height);
             TIMER++;
           } else {
             canvas.style.filter = 'brightness(33.33%)';

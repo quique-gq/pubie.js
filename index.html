@@ -11,7 +11,7 @@
       font-family: "MS Sans Serif";
       src: url('./assets/w95.ttf');
     }
-    
+
     body {
       background: url('https://quique.gq/assets/bgscroll_2x.png');
       font-family: "MS Sans Serif";
@@ -19,15 +19,20 @@
       text-align: center;
     }
 
-    footer {
-      display: inline-block;
+    #content {
+      min-height: 80vh;
     }
 
     p {
       margin: 20px;
     }
-    
-    .h1 { /* default headers don't look good with the font */
+
+    hr {
+      width: 75%;
+    }
+
+    .h1 {
+      /* default headers don't look good with the font */
       font-size: 24px;
     }
 
@@ -37,12 +42,14 @@
   </style>
 </head>
 <body>
-  <p class="h1">Pubie.js</p>
-  <p><a href="https://pubie.quique.gq">More Pubie online</a></p>
-  <div id="pubieContainer" style="margin: 10px auto 10px auto; display: inline-block"></div>
-  <p class="h2">Controls</p>
-  <p>Movement: WASD</p>
-  <p>Advance text: Enter</p>
+  <div id="content">
+    <p class="h1">Pubie.js</p>
+    <p><a href="https://pubie.quique.gq">More Pubie online</a></p>
+    <div id="pubieContainer" style="margin: 10px auto 10px auto; display: inline-block"></div>
+    <p class="h2">Controls</p>
+    <p>Movement: WASD</p>
+    <p>Advance text: Enter</p>
+  </div>
   <footer>
     <hr>
     <p>by Literal Line&emsp;

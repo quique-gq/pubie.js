@@ -83,6 +83,7 @@ var PUBIE = (function () {
     canvas.style.imageRendering = info.aa ? 'auto' : 'pixelated';
     canvas.style.imageRendering = info.aa ? 'auto' : '-moz-crisp-edges';
     stage.imageSmoothingEnabled = info.aa;
+    stage.textAlign = 'center';
   };
 
   var init = function () {
@@ -476,6 +477,8 @@ var PUBIE = (function () {
     var textbox = (function () {
       var lCanvas = document.createElement('canvas');
       var lStage = lCanvas.getContext('2d');
+      lCanvas.width = info.width / 2;
+      lCanvas.height = info.width / 8;
       var screenshot = document.createElement('canvas');
       var screenshotCtx = screenshot.getContext('2d');
       screenshot.width = info.width;
@@ -484,9 +487,8 @@ var PUBIE = (function () {
       var lastCase;
 
       var initTextbox = function () {
-        lCanvas.width = info.width / 2;
-        lCanvas.height = info.width / 8;
-        lStage.font = '12px MS Sans Serif';
+        lStage.font = '8px MS Sans Serif';
+        lStage.textAlign = 'left';
         lStage.fillStyle = '#5A5A5A';
         lStage.strokeStyle = '#4A4A4A';
         lStage.lineWidth = 7;
@@ -528,7 +530,8 @@ var PUBIE = (function () {
               drawText('pubie got out , and wonned against lugie you win');
               ROOM = 1;
           }
-          lStage.fillText('press [' + controls.ok.toUpperCase() + '] to continue', 100, 60);
+          lStage.textAlign = 'center';
+          lStage.fillText('press [' + controls.ok.toUpperCase() + '] to continue', lCanvas.width / 2 - 0.5, 60);
           lastCase = textCase;
         }
         stage.drawImage(screenshot, 0, 0);
@@ -585,8 +588,8 @@ var PUBIE = (function () {
           } else {
             canvas.style.filter = 'brightness(33.33%)';
             stage.fillStyle = '#FFFFFF';
-            stage.font = '64px MS Sans Serif';
-            stage.fillText('PAUSED', 212, 225);
+            stage.font = '32px MS Sans Serif';
+            stage.fillText('PAUSED', canvas.width / 2, 225);
           }
           then = now - (delta % interval);
         }

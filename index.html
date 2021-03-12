@@ -9,13 +9,13 @@
   <style>
     @font-face {
       font-family: "MS Sans Serif";
-      src: url('./assets/w95fa.woff');
+      src: url('./assets/w95.ttf');
     }
     
     body {
       background: url('https://quique.gq/assets/bgscroll_2x.png');
       font-family: "MS Sans Serif";
-      font-size: 16px;
+      font-size: 12px;
       text-align: center;
     }
 
@@ -28,15 +28,15 @@
     }
     
     .h1 { /* default headers don't look good with the font */
-      font-size: 32px;
+      font-size: 24px;
     }
 
     .h2 {
-      font-size: 24px;
+      font-size: 18px;
     }
   </style>
 </head>
-<body onload="PUBIE.init()">
+<body>
   <p class="h1">Pubie.js</p>
   <p><a href="https://pubie.quique.gq">More Pubie online</a></p>
   <div id="pubieContainer" style="margin: 10px auto 10px auto; display: inline-block"></div>
@@ -57,5 +57,6 @@
   </footer>
   <!--script src="https://markknol.github.io/console-log-viewer/console-log-viewer.js"></script-->
   <script src="pubie.js"></script>
+  <script>PUBIE.init();</script>
 </body>
 </html>

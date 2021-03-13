@@ -467,10 +467,10 @@ var PUBIE = (function () {
           rendering.init();
           lastRoom = ROOM;
         }
+        rendering.do(); // this goes first so you don't see the sprites clipping through each other on collision
         doControls();
         doPhysics();
         doCollision();
-        rendering.do();
       }
     })();
 

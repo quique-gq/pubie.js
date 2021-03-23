@@ -84,6 +84,13 @@ var PUBIE = (function () {
     canvas.style.imageRendering = info.aa ? 'auto' : '-moz-crisp-edges';
     stage.imageSmoothingEnabled = info.aa;
     stage.textAlign = 'center';
+    
+    if (window.location.search === '?fullscreen') {
+      canvas.style.position = 'fixed';
+      canvas.style.zIndex = 999;
+      canvas.style.width = '100vw';
+      canvas.style.height = '100vh';
+    }
   };
 
   var init = function () {

@@ -279,7 +279,6 @@ var PUBIE = (function () {
       };
 
       GameEntity.prototype.physics = function () { // im not that proud of this code but it works so idk lol
-        var s = this.speed;
         var f = this.friction;
         if (this.velX > 0) this.velX = Math.max(this.velX - f, 0);
         if (this.velX < 0) this.velX = Math.min(this.velX + f, 0);
